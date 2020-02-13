@@ -6,12 +6,14 @@ from math import sqrt
 from cell import *
 # add comments
 
-class DijkstraPlanner(CellBasedForwardSearch):
+class AstarPlanner(CellBasedForwardSearch):
     # Construct the new planner object
-    def __init__(self, title, occupancyGrid):
+    def __init__(self, title, occupancyGrid, heuristic_type, heuristic_constant = 1):
         CellBasedForwardSearch.__init__(self, title, occupancyGrid)
         self.dijkstraQueue = []
-
+        self.heuristic_constant = heuristic_constant
+        self.heuristic_type = heuristic_type
+        
     # Simply put on the end of the queue
     def pushCellOntoQueue(self, cell):
         heappush(self.dijkstraQueue, (cell.pathCost, cell))
@@ -28,7 +30,29 @@ class DijkstraPlanner(CellBasedForwardSearch):
     def calculateCost(self, cell, parentCell):
         cumulative_cost = parentCell.pathCost
         next_cost = self.computeLStageAdditiveCost(parentCell, cell)
-        total_cost = cumulative_cost + next_cost
+        total_cost = cumulative_cost + next_cost 
+
+        if self.heuristic_type == 'constant':
+            total_cost += self.heuristic_constant
+        
+        elif self.heuristic_type == 'euclidean':
+            dx = abs(cell.coords[0] - self.goal.coords[0])
+            dy = abs(cell.coords[1] - self.goal.coords[1])
+            heuristic_cost = sqrt(dx**2 + dy**2)
+            total_cost += self.heuristic_constant * heuristic_cost
+        
+        elif self.heuristic_type == 'octile':
+            dx = abs(cell.coords[0] - self.goal.coords[0])
+            dy = abs(cell.coords[1] - self.goal.coords[1])
+            heuristic_cost = max(dx,dy) + (sqrt(2) - 1) * min(dx,dy)
+            total_cost += self.heuristic_constant * heuristic_cost
+
+        elif self.heuristic_type == 'manhattan':
+            dx = abs(cell.coords[0] - self.goal.coords[0])
+            dy = abs(cell.coords[1] - self.goal.coords[1])
+            heuristic_cost = dx + dy
+            total_cost += self.heuristic_constant * heuristic_cost
+
         return total_cost
 
     def resolveDuplicate(self, cell, parentCell):

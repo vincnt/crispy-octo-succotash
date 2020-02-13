@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 # Import the needed types.
-from comp0037_planner_controller.dijkstra_planner import DijkstraPlanner
+from comp0037_planner_controller.astar_planner import AstarPlanner
 from comp0037_planner_controller.occupancy_grid import OccupancyGrid
 import map_getter
 import rospy
@@ -17,8 +17,9 @@ start = rospy.get_param("start_pose")
 goal = rospy.get_param("goal_pose")
 
 # Create the planner. The first field is the title which will appear in the
-# graphics window, the second the occupancy grid used.
-planner = DijkstraPlanner('Dijkstra Search', occupancyGrid)
+# graphics window, the second the occupancy grid used. 
+# third field is the weight for a weighted A* algorithm. For constant heuristic type, it is the constant
+planner = AstarPlanner('Astar Constant Search', occupancyGrid, 'manhattan', 10)
 
 # This causes the planner to slow down and pause for things like key entries
 planner.setRunInteractively(True)
