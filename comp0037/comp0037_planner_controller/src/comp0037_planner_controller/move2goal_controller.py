@@ -23,7 +23,7 @@ class Move2GoalController(ControllerBase):
         self.angleErrorGain = rospy.get_param('angle_error_gain', 4)
 
         self.driveAngleErrorTolerance = math.radians(rospy.get_param('angle_error_tolerance', 1))
-    
+        
     def get_distance(self, goal_x, goal_y):
         distance = sqrt(pow((goal_x - self.pose.x), 2) + pow((goal_y - self.pose.y), 2))
         return distance
@@ -48,7 +48,7 @@ class Move2GoalController(ControllerBase):
             #print("Current Pose: x: {}, y:{} , theta: {}\nGoal: x: {}, y: {}\n".format(self.pose.x, self.pose.y,
             #                                                                           self.pose.theta, waypoint[0],
             #                                                                           waypoint[1]))
-            print("Distance Error: {}\nAngular Error: {}".format(distanceError, angleError))
+            # print("Distance Error: {}\nAngular Error: {}".format(distanceError, angleError))
 
             # Proportional Controller
             # linear velocity in the x-axis: only switch on when the angular error is sufficiently small

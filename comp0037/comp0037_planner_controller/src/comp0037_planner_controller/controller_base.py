@@ -38,6 +38,14 @@ class ControllerBase(object):
         # This is the rate at which we broadcast updates to the simulator in Hz.
         self.rate = rospy.Rate(10)
 
+        self.distanceTravelled = 0
+        self.angleTurned = 0
+        self.prevX = 0
+        self.prevY = 0
+        self.prevTheta = 0
+        self.firstTime = True
+        self.notTeleportGoal = False
+
     # Get the pose of the robot. Store this in a Pose2D structure because
     # this is easy to use. Use radians for angles because these are used
     # inside the control system.
@@ -53,6 +61,19 @@ class ControllerBase(object):
         pose.y = position.y
         pose.theta = 2 * atan2(orientation.z, orientation.w)
         self.pose = pose
+        if self.notTeleportGoal:
+            if self.firstTime:
+                self.prevX = pose.x
+                self.prevY = pose.y
+                self.prevTheta = pose.theta
+                self.firstTime = False
+            dDistance = sqrt((pose.x - self.prevX)**2+(pose.y - self.prevY)**2)
+            self.distanceTravelled += dDistance
+            self.angleTurned += (abs(pose.theta - self.prevTheta))
+            self.prevX = pose.x
+            self.prevY = pose.y
+            self.prevTheta = pose.theta
+            # print('distance Travelled: {}  angle turned: {}'.format(self.distanceTravelled, self.angleTurned))
 
     # Return the most up-to-date pose of the robot
     def getCurrentPose(self):
@@ -71,6 +92,8 @@ class ControllerBase(object):
     # make sure the graphics are redrawn properly.
     def drivePathToGoal(self, path, goalOrientation, plannerDrawer):
         self.plannerDrawer = plannerDrawer
+        self.notTeleportGoal = True
+
 
         rospy.loginfo('Driving path to goal with ' + str(len(path.waypoints)) + ' waypoint(s)')
         

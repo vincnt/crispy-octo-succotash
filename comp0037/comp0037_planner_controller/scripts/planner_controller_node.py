@@ -2,6 +2,7 @@
 import rospy
 import threading
 import math
+import time
 
 # Robot pose
 from geometry_msgs.msg import Pose
@@ -138,8 +139,10 @@ class PlannerControllerNode(object):
         service = rospy.Service('drive_to_goal', Goal, self.handleDriveToGoal)
 
         print 'Spinning to service goal requests'
-        
+        self.startTime = rospy.get_rostime()
+
         while not rospy.is_shutdown():
+            print('time elapsed: ', rospy.get_rostime().secs - self.startTime.secs)
 
             # Wait for a new goal. Allow at most 0.1s, which gives
             # time to check if we are shutting down
