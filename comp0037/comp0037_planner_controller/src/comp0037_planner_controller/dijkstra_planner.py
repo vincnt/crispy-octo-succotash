@@ -3,7 +3,7 @@
 from cell_based_forward_search import CellBasedForwardSearch
 from heapq import heappush, heappop, heapify
 from math import sqrt
-
+from cell import *
 # add comments
 
 class DijkstraPlanner(CellBasedForwardSearch):
@@ -48,6 +48,6 @@ class DijkstraPlanner(CellBasedForwardSearch):
             cumulative_cost = parentCell.pathCost
             next_cost = self.computeLStageAdditiveCost(parentCell, cell)
             total_cost = cumulative_cost + next_cost
-        cell.label = 2
+        cell.label = CellLabel.ALIVE
         cell.parent = parentCell      
         cell.pathCost = total_cost
