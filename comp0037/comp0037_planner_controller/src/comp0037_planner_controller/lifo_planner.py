@@ -2,13 +2,18 @@
 
 from cell_based_forward_search import CellBasedForwardSearch
 
+
 class LIFOPlanner(CellBasedForwardSearch):
 
     # This implements a simple LIFO (last in first out or depth first) search algorithm
-    
+
     def __init__(self, title, occupancyGrid):
         CellBasedForwardSearch.__init__(self, title, occupancyGrid)
         self.lifoQueue = list()
+
+    # (!) new method that returns the length of the queue
+    def getQueueLength(self):
+        return len(self.lifoQueue)
 
     # Simply put on the end of the queue
     def pushCellOntoQueue(self, cell):
