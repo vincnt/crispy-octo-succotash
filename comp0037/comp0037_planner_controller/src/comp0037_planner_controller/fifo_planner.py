@@ -14,7 +14,9 @@ class FIFOPlanner(CellBasedForwardSearch):
     def __init__(self, title, occupancyGrid):
         CellBasedForwardSearch.__init__(self, title, occupancyGrid)
         self.fifoQueue = deque()
-
+    # (!) new method that returns the length of the queue
+    def getQueueLength(self):
+        return len(self.fifoQueue)
     # Simply put on the end of the queue
     def pushCellOntoQueue(self, cell):
         self.fifoQueue.append(cell)
