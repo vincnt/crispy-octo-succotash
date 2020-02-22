@@ -19,6 +19,10 @@ class GreedyPlanner(CellBasedForwardSearch):
         distance = sqrt((cellCoords[0] - goalCoords[0])**2 + (cellCoords[1] - goalCoords[1])**2)
         heappush(self.greedyQueue, (distance, cell))
 
+    # (!) new method that returns the length of the queue
+    def getQueueLength(self):
+        return len(self.greedyQueue)
+
     # Check the queue size is zeros
     def isQueueEmpty(self):
         return not self.greedyQueue

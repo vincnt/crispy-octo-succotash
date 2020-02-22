@@ -18,7 +18,7 @@ goal = rospy.get_param("goal_pose")
 
 # Create the planner. The first field is the title which will appear in the
 # graphics window, the second the occupancy grid used.
-planner = GreedyPlanner('Breadth First Search', occupancyGrid)
+planner = GreedyPlanner('Greedy Search', occupancyGrid)
 
 # This causes the planner to slow down and pause for things like key entries
 planner.setRunInteractively(True)

@@ -21,6 +21,7 @@ class GeneralForwardSearchAlgorithm(PlannerBase):
 
         # Flag to store if the last plan was successful
         self.goalReached = None
+        self.outputData = {}
 
     # These methods manage the queue of cells to be visied.
     def pushCellOntoQueue(self, cell):
@@ -165,9 +166,10 @@ class GeneralForwardSearchAlgorithm(PlannerBase):
         # Do a final draw to make sure that the graphics are shown, even at the end state
         self.drawCurrentState()
 
-        print "numberOfCellsVisited = " + str(self.numberOfCellsVisited)
         print "maxQueueLength = " + str(self.max_q_len)
         print "numberOfCellsVisited = " + str(self.numberOfCellsVisited)
+        self.outputData["maxQueueLength"] = self.max_q_len
+        self.outputData["numberOfCellsVisited"] = self.numberOfCellsVisited
 
         if self.goalReached:
             print "Goal reached"
@@ -217,6 +219,9 @@ class GeneralForwardSearchAlgorithm(PlannerBase):
         print "Path travel cost = " + str(path.travelCost)
         print "Path cardinality = " + str(path.numberOfWaypoints)
         print "Total angle rotated = " + str(path.totalAngle)  # (!)
+        self.outputData["Planned Path travel cost"] = path.travelCost
+        self.outputData["Planned Path cardinality"] = path.numberOfWaypoints
+        self.outputData["Total planned angle rotated"] = path.totalAngle
 
         # Draw the path if requested
         if (self.showGraphics == True):

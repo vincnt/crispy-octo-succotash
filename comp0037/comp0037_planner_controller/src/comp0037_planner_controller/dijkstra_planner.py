@@ -19,6 +19,10 @@ class DijkstraPlanner(CellBasedForwardSearch):
     # Check the queue size is zeros
     def isQueueEmpty(self):
         return not self.dijkstraQueue
+        
+    # (!) new method that returns the length of the queue
+    def getQueueLength(self):
+        return len(self.dijkstraQueue)
 
     # Simply pull from the front of the list
     def popCellFromQueue(self):

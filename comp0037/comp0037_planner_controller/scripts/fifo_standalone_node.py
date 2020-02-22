@@ -33,3 +33,5 @@ goalReached = planner.search(start, goal)
 
 # Extract the path. This is based on the last search carried out.
 path = planner.extractPathToGoal()
+
+print('outputData', planner.outputData)
