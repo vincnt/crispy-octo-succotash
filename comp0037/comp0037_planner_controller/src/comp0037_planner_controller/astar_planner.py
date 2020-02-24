@@ -50,6 +50,18 @@ class AstarPlanner(CellBasedForwardSearch):
             dx = abs(cell.coords[0] - self.goal.coords[0])
             dy = abs(cell.coords[1] - self.goal.coords[1])
             heuristic_cost = dx + dy
+
+        elif self.heuristic_type == 'octile_scaled':
+            dx = abs(cell.coords[0] - self.goal.coords[0])
+            dy = abs(cell.coords[1] - self.goal.coords[1])
+            heuristic_cost = max(dx,dy) + (sqrt(2) - 1) * min(dx,dy)
+            heuristic_cost *= (1 + 1/150)
+
+        elif self.heuristic_type == 'chebyshev':
+            dx = abs(cell.coords[0] - self.goal.coords[0])
+            dy = abs(cell.coords[1] - self.goal.coords[1])
+            heuristic_cost = max(dx,dy) 
+            
         return heuristic_cost * self.heuristic_constant
 
     def calculateCost(self, cell, parentCell):
