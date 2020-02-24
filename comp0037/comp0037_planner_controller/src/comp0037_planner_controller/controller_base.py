@@ -99,13 +99,11 @@ class ControllerBase(object):
 
         rospy.loginfo('Driving path to goal with ' + str(len(path.waypoints)) + ' waypoint(s)')
 
-        with open('/home/ros_user/workspace/path_waypoints.pkl', 'wb') as fp:
-            pkl.dump(path.waypoints, fp)
-
-        print('waypoints dumped')
+        new_waypoints =  self.reduceWaypoints(path.waypoints)
+        print "new waypoints: ", new_waypoints
         # Drive to each waypoint in turn
-        for waypointNumber in range(0, len(path.waypoints)):
-            cell = path.waypoints[waypointNumber]
+        for waypointNumber in range(0, len(new_waypoints)):
+            cell = new_waypoints[waypointNumber]
             waypoint = self.occupancyGrid.getWorldCoordinatesFromCellCoordinates(cell.coords)
             rospy.loginfo("Driving to waypoint (%f, %f)", waypoint[0], waypoint[1])
             self.driveToWaypoint(waypoint)
@@ -118,25 +116,20 @@ class ControllerBase(object):
         # Finish off by rotating the robot to the final configuration
         if rospy.is_shutdown() is False:
             self.rotateToGoalOrientation(goalOrientation)
-
+    
     def reduceWaypoints(self, waypoints):
-        new_waypoints = []
-        i, j = 0, len(waypoints) - 1
-        xs = [cell.coords[0] for cell in waypoints]
-        ys = [cell.coords[1] for cell in waypoints]
-        thresh = 0.1
-        while i < j:
-            p, V = np.polyfit(xs[i:j], ys[i:j], 1, cov=True)
-            error = np.sqrt(V[1][1])
-            if error < thresh:
-                new_waypoints.append(waypoints[i])
-                new_waypoints.append(waypoints[j])
-                i = j
-                j = len(waypoints)
-            else:
-                j -= 1
+        new_waypoints = [waypoints[0]]
+        ox,oy = waypoints[0].coords
+        prevAngle = 0
+        print('old waypoints', len(waypoints))
 
-            print "x_1: {} +/- {}".format(p[0], np.sqrt(V[0][0]))
-            print "x_2: {} +/- {}".format(p[1], np.sqrt(V[1][1]))
-        print new_waypoints
-        return new_waypoints
+        for cell in list(waypoints)[1:]:
+            x,y = cell.coords
+            dx, dy = x- ox, y - oy
+            angle = atan2(dy, dx) 
+            if angle != prevAngle:
+                new_waypoints.append(cell)
+            prevAngle = angle
+            ox,oy = x,y
+        new_waypoints.append(list(waypoints)[-1])
+        return new_waypoints 
