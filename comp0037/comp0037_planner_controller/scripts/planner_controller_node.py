@@ -54,8 +54,7 @@ class PlannerControllerNode(object):
         self.occupancyGrid.expandObstaclesToAccountForCircularRobotOfRadius(0.2)
 
     def createPlanner(self):
-        # self.planner = FIFOPlanner('FIFO', self.occupancyGrid)
-        self.planner = AstarPlanner('Astar', self.occupancyGrid, 'manhattan', 5)
+        self.planner = AstarPlanner('Astar', self.occupancyGrid, 'euclidean', 2)
         self.planner.setPauseTime(0)
         self.planner.windowHeightInPixels = rospy.get_param('maximum_window_height_in_pixels', 700)
         
@@ -143,6 +142,9 @@ class PlannerControllerNode(object):
 
         while not rospy.is_shutdown():
             print('time elapsed: ', rospy.get_rostime().secs - self.startTime.secs)
+            print('distance Travelled: {}  angle turned: {}'.format(self.robotController.distanceTravelled, self.robotController.angleTurned))
+            self.robotController.distanceTravelled = 0
+            self.robotController.angleTurned = 0
 
             # Wait for a new goal. Allow at most 0.1s, which gives
             # time to check if we are shutting down
