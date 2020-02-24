@@ -32,7 +32,13 @@ class PlannedPath(object):
             x, y = waypoint.coords
             dx, dy = x - ox, y - oy
             angle = atan2(dy, dx) * 180 / pi
-            self.totalAngle += abs(angle - prevAngle)
+
+            delta = abs(angle - prevAngle)
+
+            if delta > 180:
+                delta = 360 - delta
+
+            self.totalAngle += delta
 
             prevAngle = angle
             ox, oy = x, y
