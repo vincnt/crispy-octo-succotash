@@ -162,7 +162,7 @@ class SearchGridDrawer(BaseDrawer):
 
     # Draw the path with a custom colour
     def drawPathGraphicsWithCustomColour(self, path, colour):
-        for p in path.waypoints:
+        for p in path:
             self.rectangles[p.coords[0]][p.coords[1]].setFill(colour)
             
         self.drawStartAndGoalGraphics()

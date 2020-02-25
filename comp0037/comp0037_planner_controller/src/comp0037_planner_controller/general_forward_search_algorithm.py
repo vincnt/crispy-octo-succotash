@@ -210,6 +210,7 @@ class GeneralForwardSearchAlgorithm(PlannerBase):
         # Update the stats on the size of the path
         path.numberOfWaypoints = len(path.waypoints)
         path.calculateTotalAngle()  #  (!)
+        new_waypoints =  self.reduceWaypoints(path.waypoints)
 
         # Note that if we failed to reach the goal, the above mechanism computes a path length of 0.
         # Therefore, if we didn't reach the goal, change it to infinity
@@ -226,12 +227,29 @@ class GeneralForwardSearchAlgorithm(PlannerBase):
         # Draw the path if requested
         if (self.showGraphics == True):
             self.plannerDrawer.update()
-            self.plannerDrawer.drawPathGraphicsWithCustomColour(path, colour)
+            self.plannerDrawer.drawPathGraphicsWithCustomColour(path.waypoints, colour)
+            self.plannerDrawer.drawPathGraphicsWithCustomColour(new_waypoints, 'green')
             self.plannerDrawer.waitForKeyPress()
 
         # Return the path
         return path
 
+    def reduceWaypoints(self, waypoints):
+        new_waypoints = [waypoints[0]]
+        ox,oy = waypoints[0].coords
+        prevAngle = 0
+        print('old waypoints', len(waypoints))
+
+        for cell in list(waypoints)[1:]:
+            x,y = cell.coords
+            dx, dy = x- ox, y - oy
+            angle = atan2(dy, dx) 
+            if angle != prevAngle:
+                new_waypoints.append(cell)
+            prevAngle = angle
+            ox,oy = x,y
+        new_waypoints.append(list(waypoints)[-1])
+        return new_waypoints 
     # Extract the path from a specified end cell to the start. This is not
     # necessarily the full path. Rather, it lets us illustrate parts of the
     # path.

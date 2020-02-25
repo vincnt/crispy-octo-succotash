@@ -116,7 +116,7 @@ class ControllerBase(object):
         # Finish off by rotating the robot to the final configuration
         if rospy.is_shutdown() is False:
             self.rotateToGoalOrientation(goalOrientation)
-    
+
     def reduceWaypoints(self, waypoints):
         new_waypoints = [waypoints[0]]
         ox,oy = waypoints[0].coords

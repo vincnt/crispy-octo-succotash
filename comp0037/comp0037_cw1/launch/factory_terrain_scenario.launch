@@ -3,7 +3,7 @@
   <param name="use_sim_time" type="bool" value="true" />
   <rosparam param="clock_send_rate">40</rosparam>
   <rosparam param="time_scale_factor">1.3</rosparam>
-  <rosparam param="distance_error_gain">1.5</rosparam>
+  <rosparam param="distance_error_gain">1</rosparam>
 
   <!-- Scenario -->
   <arg name="map_file" default="$(find comp0037_resources)/maps/factory_terrain.yaml"/>
